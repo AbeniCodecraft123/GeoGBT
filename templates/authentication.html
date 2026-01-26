@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentication</title>
+    <link href="{{ url_for('static', filename='css/auth2.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f6f4f2;
+            color: #425664;
+            font-family: Arial, sans-serif;
+        }
+        .login-wrap {
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        .login-html {
+            background: #425664;
+            padding: 30px;
+            border-radius: 12px;
+            color: #f6f4f2;
+        }
+        .login-html .tab {
+            color: #c6ad8f;
+        }
+        .login-html input[type="radio"]:checked + .tab {
+            font-weight: bold;
+        }
+        .login-form {
+            margin-top: 20px;
+        }
+        .group {
+            margin-bottom: 15px;
+        }
+        .group .label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #c6ad8f;
+        }
+        .group .input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(198,173,143,0.5);
+            background: rgba(255,255,255,0.1);
+            color: #425664;
+        }
+        .button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #c6ad8f;
+            color: #425664;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .google-login .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f6f4f2;
+            color: #425664;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .google-login .google-btn img {
+            margin-right: 8px;
+        }
+        .flash {
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            background: rgba(198,173,143,0.2);
+            color: #425664;
+        }
+        .error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        .foot-lnk a {
+            color: #c6ad8f;
+            text-decoration: none;
+        }
+        .foot-lnk a:hover {
+            text-decoration: underline;
+        }
+        /* ================= MOBILE VIEW ================= */
+@media (max-width: 768px) {
+
+    .login-wrap {
+        width: 100%;
+        margin: 20px auto;
+    }
+
+    .login-html {
+        padding: 20px;
+        border-radius: 14px;
+        background: rgba(66, 86, 100, 0.88); /* overlay only */
+    }
+
+    /* Tabs */
+    .login-html .tab {
+        font-size: 14px;
+        padding: 8px 12px;
+        color: #c6ad8f;
+    }
+
+    /* Inputs */
+    .group .input {
+        font-size: 14px;
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    /* Buttons */
+    .button {
+        padding: 14px;
+        font-size: 15px;
+        border-radius: 12px;
+    }
+
+    /* Google Button */
+    .google-login .google-btn {
+        font-size: 14px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .google-login .google-btn img {
+        width: 16px;
+    }
+
+    /* Flash Messages */
+    .flash {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    /* Error text */
+    .error {
+        font-size: 12px;
+    }
+
+    /* Footer link */
+    .foot-lnk a {
+        font-size: 13px;
+        color: #c6ad8f;
+    }
+}
+
+/* ================= SMALL PHONES ================= */
+@media (max-width: 480px) {
+
+    .login-html {
+        padding: 16px;
+    }
+
+    .login-html .tab {
+        font-size: 13px;
+    }
+
+    .group .input {
+        font-size: 13px;
+    }
+
+    .button {
+        font-size: 14px;
+    }
+
+    .google-login .google-btn {
+        font-size: 13px;
+    }
+}
+
+    </style>
+</head>
+<body style="background-image: url('{{ url_for('static', filename='img/istockphoto-1008111292-612x612.jpg') }}');
+             background-size: cover;
+             background-position: center;
+             background-repeat: no-repeat;
+             opacity: 5.0;">
+
+<div class="login-wrap">
+    <div class="login-html">
+
+        <!-- RADIO TABS -->
+        <input id="tab-1" type="radio" name="tab" class="sign-in"
+               {% if active_tab != 'signup' %}checked{% endif %}>
+        <label for="tab-1" class="tab">Sign In</label>
+
+        <input id="tab-2" type="radio" name="tab" class="sign-up"
+               {% if active_tab == 'signup' %}checked{% endif %}>
+        <label for="tab-2" class="tab">Sign Up</label>
+
+        <!-- LOGIN & SIGNUP FORMS -->
+        <div class="login-form">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- SIGN IN -->
+            <form method="POST" action="{{ url_for('login') }}" class="sign-in-htm">
+                {{ login_form.hidden_tag() }}
+
+                <div class="group">
+                    {{ login_form.email.label(class="label") }}
+                    {{ login_form.email(class="input", placeholder="Email address") }}
+                    {% if login_form.email.errors %}
+                        <div class="error">{{ login_form.email.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="group">
+                    {{ login_form.password.label(class="label") }}
+                    {{ login_form.password(class="input", placeholder="Password") }}
+                    {% if login_form.password.errors %}
+                        <div class="error">{{ login_form.password.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="group">
+                    {{ login_form.submit(class="button") }}
+                </div>
+
+                <div class="hr"></div>
+
+            </form>
+
+            <!-- SIGN UP -->
+            <form method="POST" action="{{ url_for('sign_up') }}" class="sign-up-htm">
+                {{ signup_form.hidden_tag() }}
+
+                <div class="group">
+                    {{ signup_form.full_name.label(class="label") }}
+                    {{ signup_form.full_name(class="input", placeholder="Full Name") }}
+                    {% if signup_form.full_name.errors %}
+                        <div class="error">{{ signup_form.full_name.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="group">
+                    {{ signup_form.email.label(class="label") }}
+                    {{ signup_form.email(class="input", placeholder="Email address") }}
+                    {% if signup_form.email.errors %}
+                        <div class="error">{{ signup_form.email.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="group">
+                    {{ signup_form.password.label(class="label") }}
+                    {{ signup_form.password(class="input", placeholder="Password") }}
+                    {% if signup_form.password.errors %}
+                        <div class="error">{{ signup_form.password.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="group">
+                    {{ signup_form.confirm_password.label(class="label") }}
+                    {{ signup_form.confirm_password(class="input", placeholder="Confirm Password") }}
+                    {% if signup_form.confirm_password.errors %}
+                        <div class="error">{{ signup_form.confirm_password.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="group">
+                    {{ signup_form.submit(class="button") }}
+                </div>
+
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

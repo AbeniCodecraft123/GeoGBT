@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Geoscience</title>
+<style>
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f6f4f2;
+    color:#425664;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Left text box */
+.text-box {
+    flex: 1 1 400px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Right video box */
+.video-box {
+    flex: 1 1 400px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Video responsive */
+.video-box video, .video-box iframe {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* Headings */
+h1 {
+    color:#425664;
+    margin-bottom: 12px;
+}
+p {
+    line-height: 1.6;
+}
+
+/* Mobile stacking */
+@media(max-width:768px) {
+    .container {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Text content -->
+  <div class="container">
+    <!-- Text content -->
+    <div class="text-box">
+        <h1>About Geoscience</h1>
+        <p>
+            Geoscience is the study of the Earth, including its composition, structure, physical properties, and processes.
+            It encompasses various fields such as geology, geophysics, geochemistry, hydrology, and environmental science.
+        </p>
+        <p>
+            Geoscientists work to understand natural phenomena like earthquakes, volcanic eruptions, and climate change,
+            while also exploring resources such as minerals, oil, and groundwater. By integrating observations,
+            experiments, and modeling, geoscience helps society make informed decisions about sustainability and natural hazards.
+        </p>
+        <p>
+            Our platform, GeoGBT, aims to provide a comprehensive hub for geoscience knowledge, research, and interactive tools.
+            Users can ask questions, access educational resources, and explore geoscience concepts through multimedia content.
+        </p>
+    </div>
+    <!-- Video / Animation -->
+<div class="video-box"
+     style="background-image: url('{{ url_for('static', filename='img/istockphoto-1435070204-612x612.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            min-height: 300px;">
+</div>
+
+
+</body>
+</html>

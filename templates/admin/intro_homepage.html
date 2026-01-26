@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GeoAI App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { margin:0; font-family: Arial; display:flex; height:100vh; background:#f6f4f2; color:#425664; transition: all 0.3s ease; }
+/* SIDEBAR */
+.sidebar { width:250px; background:#425664; padding:16px; display:flex; flex-direction:column; color:#f6f4f2; transition: transform 0.3s ease; }
+.sidebar h3 { margin:0 0 6px 0; color:#c6ad8f; }
+.sidebar small { color:#f6f4f2; }
+.sidebar button { width:100%; padding:12px; border-radius:10px; border:none; cursor:pointer; font-weight:600; margin-bottom:12px; }
+.new-chat { background:#2563eb; color:white; }
+.logout { background:#ef4444; color:white; margin-top:auto; }
+/* MAIN */
+main { flex:1; padding:20px; display:flex; flex-direction:column; transition: all 0.3s ease; }
+h1 { margin:0 0 6px 0; color:#425664; }
+p { margin:0 0 12px 0; color:#425664; }
+/* CHAT */
+#chatArea { flex:1; background:#c6ad8f33; padding:12px; border-radius:12px; display:flex; flex-direction:column; gap:8px; overflow-y:auto; margin-bottom:10px; }
+.chat-message { max-width:70%; padding:10px 14px; border-radius:12px; word-wrap:break-word; }
+.chat-question { background:#425664; color:#f6f4f2; align-self:flex-end; }
+.chat-answer { background:#f6f4f2; color:#425664; align-self:flex-start; }
+/* INPUT */
+.input-area { max-width:900px; width:100%; margin:0 auto; display:flex; flex-direction:column; gap:8px; position:relative; }
+textarea { width:100%; height:80px; border-radius:12px; border:1px solid rgba(66,86,100,0.5); background:rgba(255,255,255,0.1); color:#425664; padding:12px; resize:none; padding-right:50px; }
+.send-btn { position:absolute; right:8px; bottom:12px; padding:10px 16px; border:none; border-radius:10px; background:#2563eb; color:white; cursor:pointer; }
+#fileInput { display:none; }
+label.upload-icon { position:absolute; left:8px; bottom:12px; font-size:20px; cursor:pointer; color:#425664; }
+/* MOBILE */
+/* MOBILE */
+@media(max-width:768px) {
+    body { flex-direction:column; }
+
+    /* Sidebar hidden by default */
+    .sidebar {
+        width:250px;
+        position:fixed;
+        top:0;
+        left:0;
+        height:100%;
+        z-index:1000;
+        box-shadow:2px 0 6px rgba(0,0,0,0.2);
+        transform: translateX(-260px); /* hidden offscreen */
+        transition: transform 0.3s ease;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    main {
+        padding:10px;
+        margin-left:0;
+        transition: all 0.3s ease;
+    }
+
+    /* Hamburger button */
+    .hamburger {
+        display:flex;
+        position:fixed;
+        top:12px;
+        left:12px;
+        z-index:1100;
+        width:36px;
+        height:28px;
+        flex-direction:column;
+        justify-content:space-between;
+        cursor:pointer;
+        background:white;
+        border-radius:6px;
+        padding:4px;
+    }
+    .hamburger span {
+        display:block;
+        height:4px;
+        background:#425664;
+        border-radius:2px;
+        transition: all 0.3s ease;
+    }
+
+    /* Overlay to click outside and close sidebar */
+    .overlay {
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.3);
+        z-index:900;
+    }
+    .overlay.active { display:block; }
+
+    /* Header spacing so hamburger doesn't overlap */
+    header {
+        padding-left:60px; /* enough for hamburger */
+        margin-bottom:12px;
+    }
+    geo-header, .geo-subheader {
+        text-align: center !important;
+    }
+}.
+
+</style>
+</head>
+<body>
+
+<!-- Hamburger menu for mobile -->
+
+
+<!-- Hamburger menu for mobile -->
+<div class="hamburger" id="hamburgerBtn">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<div class="overlay" id="overlay"></div>
+
+
+<aside class="sidebar" id="sidebar">
+
+    <p style="font-size:0.85rem;color:#c6ad8f; margin-top:12px;">Chat History</p>
+    <ul id="chatHistory" style="list-style:none;padding:0;margin:0;flex:1;overflow-y:auto;">
+        {% for chat in chats %}
+        <li class="chat-history-item"
+            data-chat-id="chat-{{ loop.index0 }}"
+            style="padding:6px 8px; border-radius:6px; background:rgba(198,173,143,0.2); margin-bottom:4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {{ chat.question[:40] }}{% if chat.question|length > 40 %}...{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <h3>{{ user.full_name }}</h3>
+
+  <button class="logout" id="logoutBtn">Logout</button>
+
+    <script>
+    document.getElementById("logoutBtn").addEventListener("click", function(){
+        if(confirm("Are you sure you want to logout?")) {
+            window.location.href = "{{ url_for('logout') }}";
+        }
+    });
+    </script>
+
+</aside>
+
+<main>
+    <h1 style="margin:0; color:#425664; text-align: left;" class="geo-subheader">GeoGBT</h1>
+<p style="margin:4px 0 12px 0; color:#425664; text-align: left;" class="geo-subheader">Ask geology & geophysics questions</p>
+
+    <div id="chatArea">
+        {% for chat in chats %}
+        <div class="chat-message chat-question" id="chat-{{ loop.index0 }}">{{ chat.question }}</div>
+        <div class="chat-message chat-answer">{{ chat.answer }}</div>
+        {% endfor %}
+    </div>
+    <div class="input-area">
+        <textarea placeholder="Ask GeoAI…" id="chatInput"></textarea>
+        <label for="fileInput" class="upload-icon"></label>
+        <input type="file" id="fileInput" accept=".pdf,.txt">
+        <button class="send-btn" id="sendBtn">➤</button>
+    </div>
+    <div class="extra-buttons" style="display:flex; gap:12px; margin-top:8px;">
+        <a href="https://drive.google.com/drive/folders/1kPEnwGLwcyckSMvd6OQSrirgWN-hxnp3?usp=sharing" target="_blank" class="btn-link" style="flex:1; text-align:center; padding:8px 12px; background:#2563eb; color:white; border-radius:10px; text-decoration:none; font-weight:600;">Download PDF 1</a>
+        <a href="{{url_for('about')}}" class="btn-link" target="_blank" style="flex:1; text-align:center; padding:8px 12px; background:#16a34a; color:white; border-radius:10px; text-decoration:none; font-weight:600;">About Geoscience</a>
+        <a href="https://drive.google.com/drive/folders/1-H-sThuBdcf3Ht22g6SIE9-GbwzNh2RO" target="_blank" class="btn-link" style="flex:1; text-align:center; padding:8px 12px; background:#f59e0b; color:white; border-radius:10px; text-decoration:none; font-weight:600;">Download PDF 2</a>
+    </div>
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const sidebar = $("#sidebar");
+const hamburger = $("#hamburgerBtn");
+const overlay = $("#overlay");
+
+function openSidebar(){
+    sidebar.addClass("active");
+    overlay.addClass("active");
+}
+function closeSidebar(){
+    sidebar.removeClass("active");
+    overlay.removeClass("active");
+}
+
+hamburger.click(openSidebar);
+overlay.click(closeSidebar);
+</script>
+
+<script>
+$(function(){
+    const chatArea = $("#chatArea");
+    const chatInput = $("#chatInput");
+    const sendBtn = $("#sendBtn");
+    const fileInput = $("#fileInput");
+    const sidebar = $("#sidebar");
+    const hamburger = $("#hamburgerBtn");
+    const overlay = $("#overlay");
+
+    let currentChatId = null;
+
+    // Toggle sidebar on mobile
+    function openSidebar(){
+        sidebar.addClass("active");
+        overlay.addClass("active");
+    }
+    function closeSidebar(){
+        sidebar.removeClass("active");
+        overlay.removeClass("active");
+    }
+
+    hamburger.click(openSidebar);
+    overlay.click(closeSidebar);
+
+    function typeWriterEffect(text, container){
+        const bubble = $('<div class="chat-message chat-answer"></div>');
+        container.append(bubble);
+        let i = 0;
+        function type(){
+            if(i < text.length){
+                bubble.append(text.charAt(i));
+                i++;
+                container.scrollTop(container[0].scrollHeight);
+                setTimeout(type, 20);
+            }
+        }
+        type();
+    }
+
+    function sendQuestion(question){
+        if(!question && !fileInput[0].files[0]) return;
+
+        const file = fileInput[0].files[0];
+        let displayQuestion = file ? `[File: ${file.name}] ${question}` : question;
+        chatArea.append(`<div class="chat-message chat-question" data-chat-id="${currentChatId || 'temp'}">${displayQuestion}</div>`);
+        chatInput.val('');
+        fileInput.val(''); // reset file input
+
+        const typingBubble = $('<div class="chat-message chat-answer">GeoGBT is typing...</div>');
+        chatArea.append(typingBubble);
+        chatArea.scrollTop(chatArea[0].scrollHeight);
+
+        if(file){
+            let formData = new FormData();
+            formData.append("file", file);
+            formData.append("instruction", question);
+
+            const progressBubble = $('<div class="chat-message chat-answer">Processing file…</div>');
+            chatArea.append(progressBubble);
+
+            $.ajax({
+                url: "/geoai-file",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function(evt){
+                        if(evt.lengthComputable){
+                            const percent = Math.round((evt.loaded / evt.total) * 100);
+                            progressBubble.text(`Uploading file… ${percent}%`);
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(data){
+                    typingBubble.remove();
+                    progressBubble.remove();
+                    typeWriterEffect(data.answer, chatArea);
+                },
+                error: function(xhr){
+                    typingBubble.text("GeoAI failed: " + (xhr.responseJSON?.answer || "Unknown error"));
+                    progressBubble.remove();
+                }
+            });
+
+        } else {
+            $.ajax({
+                url: "/geoai",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({question: question, chat_id: currentChatId}),
+                success: function(data){
+                    typingBubble.remove();
+                    typeWriterEffect(data.answer, chatArea);
+                },
+                error: function(){
+                    typingBubble.text("GeoGBT failed.");
+                }
+            });
+        }
+    }
+
+    sendBtn.click(()=> sendQuestion(chatInput.val().trim()));
+
+    chatInput.keypress(function(e){
+        if(e.which === 13 && !e.shiftKey){
+            e.preventDefault();
+            sendQuestion(chatInput.val().trim());
+        }
+    });
+
+    fileInput.change(function(){
+        const file = this.files[0];
+        if(!file) return;
+        chatInput.val(`[File: ${file.name}] `);
+    });
+
+    $(".chat-history-item").click(function() {
+        const chatId = $(this).data("chat-id");
+        const target = $("#" + chatId);
+        if(target.length){
+            $("#chatArea").animate({
+                scrollTop: target.offset().top - $("#chatArea").offset().top + $("#chatArea").scrollTop()
+            }, 300);
+            target.css("background", "#ffeaa7")
+                  .animate({backgroundColor: target.hasClass('chat-question') ? '#425664' : '#f6f4f2'}, 1000);
+        }
+    });
+
+    $(".new-chat").click(function(){
+        $.ajax({
+            url: "/new-chat",
+            type: "POST",
+            success: function(data){
+                currentChatId = data.chat_id;
+                chatArea.empty();
+                chatInput.val('');
+            },
+            error: function(){
+                alert("Failed to create new chat.");
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
