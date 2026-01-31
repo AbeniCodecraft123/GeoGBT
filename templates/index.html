@@ -3,8 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="google-site-verification" content="googlebc82b02a0e93a836.html">
   <title>GeoGBT | Home</title>
+
+    <meta name="description"
+      content="GeoGBT is a geospatial and earth science learning platform built by AbeniCodeCraft. Learn GIS, remote sensing, and geoscience tools." />
+
+   <meta name="author" content="AbeniCodeCraft" />
+
+   <meta name="keywords"
+      content="GeoGBT, GIS, Geospatial, Remote Sensing, Earth Science, AbeniCodeCraft" />
+<meta property="og:title" content="GeoGBT – Geospatial Learning Platform" />
+<meta property="og:description"
+      content="Built by AbeniCodeCraft. Learn GIS, geospatial analysis, and earth science with GeoGBT." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://geogbt.onrender.com/" />
+<meta property="og:image" content="static/img/White Black Retro Modern Y2K Streetwear Logo.png" />
 
   <!-- Bootstrap (optional but helpful) -->
   <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -70,17 +84,73 @@
       text-decoration: none;
       border-radius: 30px;
       font-size: 1.1rem;
-      transition: 0.3s ease;
+      transition: 3s ease;
     }
 
     .hero a:hover {
       background: #084298;
       transform: translateY(-2px);
     }
+    /* Page Loader */
+#page-loader {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.loader-logo {
+    width: 80px;
+    margin-bottom: 15px;
+    animation: pulse 4s infinite;
+}
+
+.spinner {
+    width: 35px;
+    height: 35px;
+    border: 3px solid #e0e0e0;
+    border-top: 3px solid #111;
+    border-radius: 50%;
+    animation: spin 3s linear infinite;
+}
+
+/* Animations */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Hide loader */
+body.loaded #page-loader {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 3.1s ease;
+}
+
   </style>
 </head>
 
 <body>
+<!-- Page Loader -->
+<div id="page-loader">
+    <div class="loader-content">
+        <img src="{{ url_for('static', filename='img/White Black Retro Modern Y2K Streetwear Logo.png') }}" alt="Logo" class="loader-logo">
+        <div class="spinner"></div>
+    </div>
+</div>
+
 
   <!-- HERO / HOMEPAGE -->
  <section class="hero">
@@ -99,4 +169,27 @@
 
 
 </body>
+<script>
+    window.addEventListener("load", function () {
+        document.body.classList.add("loaded");
+    });
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "AbeniCodeCraft",
+  "url": "https://geogbt.onrender.com",
+  "sameAs": [
+    "https://www.abenicodecraftportfolio.netlify.app/",
+    "https://github.com/AbeniCodecraft123"
+  ],
+  "jobTitle": "Full Stack Developer & Geospatial Enthusiast",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "GeoGBT"
+  }
+}
+</script>
+
+</script>
 </html>

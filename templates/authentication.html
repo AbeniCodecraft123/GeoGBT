@@ -1,191 +1,223 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Authentication</title>
+
+    <!-- ✅ REQUIRED FOR MOBILE AUTO-LAYOUT -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="{{ url_for('static', filename='css/auth2.css') }}" rel="stylesheet">
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background-color: #f6f4f2;
-            color: #425664;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
+            color: #425664;
         }
+
         .login-wrap {
+            width: 100%;
             max-width: 400px;
-            margin: 50px auto;
+            padding: 12px;
         }
+
         .login-html {
-            background: #425664;
+            background: rgba(66, 86, 100, 0.95);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 14px;
             color: #f6f4f2;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.4);
         }
+
         .login-html .tab {
             color: #c6ad8f;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
         }
+
+        .login-html input[type="radio"] {
+            display: none;
+        }
+
         .login-html input[type="radio"]:checked + .tab {
             font-weight: bold;
+            border-bottom: 2px solid #c6ad8f;
         }
+
         .login-form {
             margin-top: 20px;
         }
+
         .group {
             margin-bottom: 15px;
         }
+
         .group .label {
             display: block;
             font-weight: bold;
             margin-bottom: 6px;
             color: #c6ad8f;
         }
+
         .group .input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(198,173,143,0.5);
-            background: rgba(255,255,255,0.1);
-            color: #425664;
-        }
-        .button {
             width: 100%;
             padding: 12px;
             border-radius: 10px;
+            border: 1px solid rgba(198,173,143,0.5);
+            background: rgba(255,255,255,0.2);
+            color: #425664;
+            font-size: 16px; /* prevents mobile zoom */
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
             border: none;
             background: #c6ad8f;
             color: #425664;
             font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
+            transition: 0.3s;
         }
-        .google-login .google-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f6f4f2;
-            color: #425664;
-            padding: 10px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
+
+        .button:hover {
+            background: #b89e7e;
         }
-        .google-login .google-btn img {
-            margin-right: 8px;
-        }
+
+        /* Flash message styling */
         .flash {
-            padding: 8px 12px;
+            padding: 12px 15px;
             margin-bottom: 12px;
-            border-radius: 6px;
-            background: rgba(198,173,143,0.2);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .flash-success {
+            background: rgba(134, 239, 172, 0.9); /* light green */
             color: #425664;
         }
+
+        .flash-error {
+            background: rgba(239, 68, 68, 0.9); /* red */
+            color: #fff;
+        }
+
         .error {
             color: #ef4444;
-            font-size: 0.85rem;
+            font-size: 13px;
             margin-top: 4px;
         }
-        .foot-lnk a {
-            color: #c6ad8f;
-            text-decoration: none;
+
+        /* ================= TABLET ================= */
+        @media (max-width: 768px) {
+            .login-html {
+                padding: 22px;
+            }
+
+            .login-html .tab {
+                font-size: 14px;
+            }
+
+            .button {
+                font-size: 15px;
+            }
         }
-        .foot-lnk a:hover {
-            text-decoration: underline;
+
+        /* ================= SMALL PHONES ================= */
+        @media (max-width: 480px) {
+            .login-html {
+                padding: 18px;
+                box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+            }
+
+            .login-html .tab {
+                font-size: 13px;
+            }
+
+            .button {
+                font-size: 14px;
+            }
         }
-        /* ================= MOBILE VIEW ================= */
-@media (max-width: 768px) {
-
-    .login-wrap {
-        width: 100%;
-        margin: 20px auto;
-    }
-
-    .login-html {
-        padding: 20px;
-        border-radius: 14px;
-        background: rgba(66, 86, 100, 0.88); /* overlay only */
-    }
-
-    /* Tabs */
-    .login-html .tab {
-        font-size: 14px;
-        padding: 8px 12px;
-        color: #c6ad8f;
-    }
-
-    /* Inputs */
-    .group .input {
-        font-size: 14px;
-        padding: 12px;
-        border-radius: 10px;
-    }
-
-    /* Buttons */
-    .button {
-        padding: 14px;
-        font-size: 15px;
-        border-radius: 12px;
-    }
-
-    /* Google Button */
-    .google-login .google-btn {
-        font-size: 14px;
-        padding: 12px;
-        border-radius: 12px;
-    }
-
-    .google-login .google-btn img {
-        width: 16px;
-    }
-
-    /* Flash Messages */
-    .flash {
-        font-size: 13px;
-        padding: 10px;
-    }
-
-    /* Error text */
-    .error {
-        font-size: 12px;
-    }
-
-    /* Footer link */
-    .foot-lnk a {
-        font-size: 13px;
-        color: #c6ad8f;
-    }
+        /* Page Loader */
+#page-loader {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
 
-/* ================= SMALL PHONES ================= */
-@media (max-width: 480px) {
+.loader-content {
+    text-align: center;
+}
 
-    .login-html {
-        padding: 16px;
-    }
+.loader-logo {
+    width: 80px;
+    margin-bottom: 15px;
+    animation: pulse 1.5s infinite;
+}
 
-    .login-html .tab {
-        font-size: 13px;
-    }
+.spinner {
+    width: 35px;
+    height: 35px;
+    border: 3px solid #e0e0e0;
+    border-top: 3px solid #111;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
 
-    .group .input {
-        font-size: 13px;
-    }
+/* Animations */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 
-    .button {
-        font-size: 14px;
-    }
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
 
-    .google-login .google-btn {
-        font-size: 13px;
-    }
+/* Hide loader */
+body.loaded #page-loader {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
 }
 
     </style>
 </head>
-<body style="background-image: url('{{ url_for('static', filename='img/istockphoto-1008111292-612x612.jpg') }}');
-             background-size: cover;
-             background-position: center;
-             background-repeat: no-repeat;
-             opacity: 5.0;">
 
+<body>
+
+ {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {% if category=='error' %}flash-error{% else %}flash-success{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 <div class="login-wrap">
     <div class="login-html">
 
@@ -198,16 +230,9 @@
                {% if active_tab == 'signup' %}checked{% endif %}>
         <label for="tab-2" class="tab">Sign Up</label>
 
-        <!-- LOGIN & SIGNUP FORMS -->
         <div class="login-form">
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="flash flash-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+
 
             <!-- SIGN IN -->
             <form method="POST" action="{{ url_for('login') }}" class="sign-in-htm">
@@ -233,8 +258,13 @@
                     {{ login_form.submit(class="button") }}
                 </div>
 
-                <div class="hr"></div>
-
+                <div class="group">
+                    <a href="{{url_for('forgot_password')}}">Forgotten Password?</a>
+                </div>
+                 <a href="{{ url_for('google.login') }}" style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#4285F4; color:white; border-radius:6px; text-decoration:none; font-weight:600;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" height="20">
+                    Continue with Google
+                </a>
             </form>
 
             <!-- SIGN UP -->
@@ -264,6 +294,7 @@
                         <div class="error">{{ signup_form.password.errors[0] }}</div>
                     {% endif %}
                 </div>
+
                 <div class="group">
                     {{ signup_form.confirm_password.label(class="label") }}
                     {{ signup_form.confirm_password(class="input", placeholder="Confirm Password") }}
@@ -275,13 +306,19 @@
                 <div class="group">
                     {{ signup_form.submit(class="button") }}
                 </div>
-
+                    <!-- Google Login Button -->
+                               <!-- Google Sign-in -->
+                <a href="{{ url_for('google.login') }}" style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#4285F4; color:white; border-radius:6px; text-decoration:none; font-weight:600;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" height="20">
+                    Sign in with Google
+                </a>
 
             </form>
 
         </div>
     </div>
 </div>
+
 
 </body>
 </html>
