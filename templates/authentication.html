@@ -25,6 +25,8 @@
             background-repeat: no-repeat;
             font-family: Arial, sans-serif;
             color: #425664;
+            background-image: url("{{ url_for('static', filename='img/istockphoto-1302842094-612x612.jpg') }}");
+
         }
 
         .login-wrap {
@@ -232,19 +234,21 @@ body.loaded #page-loader {
     </style>
 </head>
 
-<body>
+<body style="background-image: url('{{ url_for('static', filename='img/istockphoto-1302842094-612x612.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
- {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="flash {% if category=='error' %}flash-error{% else %}flash-success{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
 <div class="login-wrap">
     <div class="login-html">
+         {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash
+          {% if category in ['error', 'danger'] %}flash-error
+          {% else %}flash-success{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
         <!-- RADIO TABS -->
         <input id="tab-1" type="radio" name="tab" class="sign-in"

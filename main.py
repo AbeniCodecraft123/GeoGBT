@@ -332,13 +332,25 @@ def sign_up():
             full_name=signup_form.full_name.data,
             email=signup_form.email.data,
             password=hashed_password,
+
         )
 
         db.session.add(user)
         db.session.commit()
-        send_verification_email(user)
-        flash("Verification email sent! Check your inbox.", "success")
+
+        email_sent = send_verification_email(user)
+
+        if email_sent:
+            flash("Verification email sent! Check your inbox.", "success")
+        else:
+            flash(
+                "Sorry, We couldn't send the verification email. "
+                "Please try again later or sign up with google.",
+                "error"
+            )
+
         return redirect(url_for('login'))
+
     return render_template(
         'authentication.html',
         signup_form=signup_form,
@@ -349,21 +361,25 @@ def sign_up():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if not User.email_verified:
-        flash("Please verify your email before logging in.", "error")
-        return redirect(url_for('login'))
-
     login_form = LoginForm()
     signup_form = Signup()
 
     if login_form.validate_on_submit():
         user = User.query.filter_by(email=login_form.email.data).first()
-        if user and user.password:  # Email/password user only
-            if user.check_password(login_form.password.data):
-                login_user(user)
-                return redirect(url_for('page'))
 
-        flash("Invalid email or password.", "danger")
+        if not user:
+            flash("Invalid email or password.", "error")
+            return redirect(url_for('login'))
+
+        if not user.email_verified:
+            flash("Please verify your email before logging in.", "error")
+            return redirect(url_for('login'))
+
+        if user.password and user.check_password(login_form.password.data):
+            login_user(user)
+            return redirect(url_for('page'))
+
+        flash("Invalid email or password.", "error")
 
     return render_template(
         'authentication.html',
@@ -371,6 +387,7 @@ def login():
         signup_form=signup_form,
         active_tab='login'
     )
+
 
 
 @app.route('/auth2')
@@ -382,10 +399,6 @@ def auth2():
     )
 
 
-import smtplib
-from datetime import datetime
-import random
-from flask import flash, redirect, render_template, session, url_for
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
