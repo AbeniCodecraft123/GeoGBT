@@ -185,6 +185,31 @@
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #444;
+    font-weight: 500;
+    text-decoration: none;
+    transition: box-shadow 0.2s;
+    width: fit-content;
+}
+
+.google-btn:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.google-logo {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+}
+
 
 /* Animations */
 @keyframes spin {
@@ -261,10 +286,11 @@ body.loaded #page-loader {
                 <div class="group">
                     <a href="{{url_for('forgot_password')}}">Forgotten Password?</a>
                 </div>
-                 <a href="{{ url_for('google.login') }}" style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#4285F4; color:white; border-radius:6px; text-decoration:none; font-weight:600;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" height="20">
-                    Continue with Google
+                <a href="{{ url_for('google.login') }}" class="google-btn">
+                      <img src="{{ url_for('static', filename='img/th.webp') }}" alt="Google Logo" class="google-logo">
+                      Continue with Google
                 </a>
+
             </form>
 
             <!-- SIGN UP -->
@@ -308,10 +334,11 @@ body.loaded #page-loader {
                 </div>
                     <!-- Google Login Button -->
                                <!-- Google Sign-in -->
-                <a href="{{ url_for('google.login') }}" style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#4285F4; color:white; border-radius:6px; text-decoration:none; font-weight:600;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" height="20">
-                    Sign in with Google
-                </a>
+              <a href="{{ url_for('google.login') }}" class="google-btn">
+               <img src="{{ url_for('static', filename='img/th.webp') }}" alt="Google Logo" class="google-logo">
+                 Sign in with Google
+              </a>
+
 
             </form>
 

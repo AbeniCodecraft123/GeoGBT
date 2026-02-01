@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="googlebc82b02a0e93a836.html">
+  <meta name="google-site-verification" content="googlebc82b02a0e93a836.html">
+
   <title>GeoGBT | Home</title>
 
-    <meta name="description"
+  <meta name="description"
       content="GeoGBT is a geospatial and earth science learning platform built by AbeniCodeCraft. Learn GIS, remote sensing, and geoscience tools." />
-
-   <meta name="author" content="AbeniCodeCraft" />
-
-   <meta name="keywords"
+  <meta name="author" content="AbeniCodeCraft" />
+  <meta name="keywords"
       content="GeoGBT, GIS, Geospatial, Remote Sensing, Earth Science, AbeniCodeCraft" />
-<meta property="og:title" content="GeoGBT – Geospatial Learning Platform" />
-<meta property="og:description"
-      content="Built by AbeniCodeCraft. Learn GIS, geospatial analysis, and earth science with GeoGBT." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://geogbt.onrender.com/" />
-<meta property="og:image" content="static/img/White Black Retro Modern Y2K Streetwear Logo.png" />
 
-  <!-- Bootstrap (optional but helpful) -->
+  <meta property="og:title" content="GeoGBT – Geospatial Learning Platform" />
+  <meta property="og:description"
+      content="Built by AbeniCodeCraft. Learn GIS, geospatial analysis, and earth science with GeoGBT." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://geogbt.onrender.com/" />
+  <meta property="og:image" content="{{ url_for('static', filename='img/logo.png') }}" />
+
+  <!-- Bootstrap CSS -->
   <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
   <style>
@@ -49,7 +49,6 @@
       position: relative;
     }
 
-    /* Dark overlay */
     .hero::before {
       content: "";
       position: absolute;
@@ -57,7 +56,6 @@
       background: rgba(0, 0, 0, 0.55);
     }
 
-    /* Content */
     .hero-content {
       position: relative;
       z-index: 2;
@@ -76,7 +74,7 @@
       margin-bottom: 30px;
     }
 
-    .hero a {
+    .hero a.hero-btn {
       display: inline-block;
       padding: 14px 36px;
       background: #0d6efd;
@@ -84,112 +82,143 @@
       text-decoration: none;
       border-radius: 30px;
       font-size: 1.1rem;
-      transition: 3s ease;
+      transition: 0.3s ease;
     }
 
-    .hero a:hover {
+    .hero a.hero-btn:hover {
       background: #084298;
       transform: translateY(-2px);
     }
+
+    /* Google Sign-In Button */
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #fff;
+      color: #444;
+      font-weight: 500;
+      text-decoration: none;
+      transition: box-shadow 0.2s;
+      width: fit-content;
+      margin: 0 auto 20px auto;
+    }
+
+    .google-btn:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .google-logo {
+      height: 20px;
+      width: 20px;
+      margin-right: 10px;
+    }
+
     /* Page Loader */
-#page-loader {
-    position: fixed;
-    inset: 0;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
+    #page-loader {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
 
-.loader-content {
-    text-align: center;
-}
+    .loader-content {
+      text-align: center;
+    }
 
-.loader-logo {
-    width: 80px;
-    margin-bottom: 15px;
-    animation: pulse 4s infinite;
-}
+    .loader-logo {
+      width: 80px;
+      margin-bottom: 15px;
+      animation: pulse 0.5s infinite;
+    }
 
-.spinner {
-    width: 35px;
-    height: 35px;
-    border: 3px solid #e0e0e0;
-    border-top: 3px solid #111;
-    border-radius: 50%;
-    animation: spin 3s linear infinite;
-}
+    .spinner {
+      width: 35px;
+      height: 35px;
+      border: 3px solid #e0e0e0;
+      border-top: 3px solid #111;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
 
-/* Animations */
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
 
-/* Hide loader */
-body.loaded #page-loader {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 3.1s ease;
-}
+    /* Hide loader */
+    body.loaded #page-loader {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
 
   </style>
 </head>
 
 <body>
-<!-- Page Loader -->
-<div id="page-loader">
-    <div class="loader-content">
-        <img src="{{ url_for('static', filename='img/White Black Retro Modern Y2K Streetwear Logo.png') }}" alt="Logo" class="loader-logo">
-        <div class="spinner"></div>
-    </div>
-</div>
-
+  <!-- Page Loader -->
+  <div id="page-loader">
+      <div class="loader-content">
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="loader-logo">
+          <div class="spinner"></div>
+      </div>
+  </div>
 
   <!-- HERO / HOMEPAGE -->
- <section class="hero">
-  <div class="hero-content">
-    <h1>GeoGBT</h1>
-    <p>
-      An intelligent geoscience platform integrating
-      Geology, Geophysics, and GeoAI solutions
-    </p>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>GeoGBT</h1>
+      <p>An intelligent geoscience platform integrating Geology, Geophysics, and GeoAI solutions</p>
 
-    <a href="{{ url_for('sign_up') }}" class="hero-btn">
-      Get Started with GeoGBT
-    </a>
-  </div>
-</section>
+      <a href="{{ url_for('sign_up') }}" class="hero-btn">Get Started with GeoGBT</a>
 
+
+    </div>
+  </section>
+
+  <!-- Loader + Structured Data JS -->
+  <script>
+      // Hide loader after page fully loads
+      window.addEventListener('load', function() {
+          document.body.classList.add('loaded');
+      });
+
+      // Fallback: hide loader after 5 seconds
+      setTimeout(() => {
+          document.body.classList.add('loaded');
+      }, 5000);
+  </script>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "AbeniCodeCraft",
+    "url": "https://geogbt.onrender.com",
+    "sameAs": [
+      "https://www.abenicodecraftportfolio.netlify.app/",
+      "https://github.com/AbeniCodecraft123"
+    ],
+    "jobTitle": "Full Stack Developer & Geospatial Enthusiast",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "GeoGBT"
+    }
+  }
+  </script>
 
 </body>
-<script>
-    window.addEventListener("load", function () {
-        document.body.classList.add("loaded");
-    });
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "AbeniCodeCraft",
-  "url": "https://geogbt.onrender.com",
-  "sameAs": [
-    "https://www.abenicodecraftportfolio.netlify.app/",
-    "https://github.com/AbeniCodecraft123"
-  ],
-  "jobTitle": "Full Stack Developer & Geospatial Enthusiast",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "GeoGBT"
-  }
-}
-</script>
-
-</script>
 </html>
